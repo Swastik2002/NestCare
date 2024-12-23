@@ -1,8 +1,7 @@
 **Deployed Link:**
 https://nestcare.onrender.com/
 
-**Video Presentation**
-Link: SWASTIK_GARG_MAD1_PROJECT - Made with Clipchamp.mp4
+**Video Presentation Link:**
 https://drive.google.com/file/d/1qGD0kn6K66XJvRw11fW_qkb69wYyzDzQ/view?usp=drive_link
 
 **Admin Login Credentials:**
