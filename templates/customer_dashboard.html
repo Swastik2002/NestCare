@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Customer Dashboard{% endblock %}
+{% block content %}
+<nav class="navbar navbar-expand-sm navbar-dark bg-black">
+    <a class="navbar-brand" href="/customer">Customer</a>
+    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/customer/search">Search</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/customer/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h1>Services</h1>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for service in services %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ service.name }}</h5>
+                            <p class="card-text">{{ service.description }}</p>
+                            <p class="card-text">Base Price: {{ service.base_price }}</p>
+                            <p class="card-text">Time Required: {{ service.time_required }}</p>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createServiceRequestModal-{{ service.id }}">
+                                Create Service Request
+                            </button>
+                            <div class="modal fade" id="createServiceRequestModal-{{ service.id }}" tabindex="-1" aria-labelledby="createServiceRequestModalLabel-{{ service.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="createServiceRequestModalLabel-{{ service.id }}">Create Service Request</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST" action="/customer/create_service_request/{{ service.id }}">
+                                                <div class="mb-3">
+                                                    <label for="description-{{ service.id }}" class="form-label">Description</label>
+                                                    <input type="text" class="form-control" id="description-{{ service.id }}" name="description" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="professional_name-{{ service.id }}" class="form-label">Professional</label>
+                                                    <select class="form-select" id="professional_name-{{ service.id }}" name="professional_name" required>
+                                                        {% for professional in professionals_by_service[service.id] %}
+                                                            <option value="{{ professional.name }}">{{ professional.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Create</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h1>My Service Requests</h1>
+            {% if service_requests %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Service Name</th>
+                        <th>Description</th>
+                        <th>Professional</th>
+                        <th>Date Created</th>
+                        <th>Date Closed</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service_request in service_requests %}
+                    <tr>
+                        <td>{{ service_request.service.name }}</td>
+                        <td>{{ service_request.description }}</td>
+                        <td>{{ service_request.professional.name }}</td>
+                        <td>{{ service_request.date_created }}</td>
+                        <td>
+                            {% if service_request.status == "Closed" %}
+                            {{ service_request.date_closed }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>{{ service_request.status }}</td>
+                        <td>
+                            {% if service_request.status == "Accepted" %}
+                            <a href="/customer/close_service_request/{{ service_request.id }}" class="btn btn-primary">Close Service Request</a>
+                            {% endif %}
+                            {% if service_request.status == "Pending" %}
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-{{ service_request.id }}">
+                                Edit
+                            </button>
+                            <div class="modal fade" id="editModal-{{ service_request.id }}" tabindex="-1" aria-labelledby="editModalLabel-{{ service_request.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="editModalLabel-{{ service_request.id }}">Edit Description</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="POST" action="/customer/edit_service_request/{{ service_request.id }}">
+                                                <div class="mb-3">
+                                                    <label for="description-{{ service_request.id }}" class="form-label">Description</label>
+                                                    <textarea class="form-control" id="description-{{ service_request.id }}" name="description">{{ service_request.description }}</textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/customer/delete_service_request/{{ service_request.id }}" class="btn btn-danger">Delete</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No service requests found. Create a new service request.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

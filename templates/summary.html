@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Summary{% endblock %}
+{% block content %}
+<nav class="navbar navbar-expand-sm navbar-dark bg-danger">
+    <a class="navbar-brand" href="/admin">Admin</a>
+    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" href="/admin/summary">Summary</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<h1>Summary</h1>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Pending Requests</h5>
+                <p class="card-text">{{ pending_requests }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Completed Requests</h5>
+                <p class="card-text">{{ completed_requests }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Active Requests</h5>
+                <p class="card-text">{{ active_requests }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Rejected Requests</h5>
+                <p class="card-text">{{ rejected_requests }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Professionals</h5>
+                <p class="card-text">{{ professionals_count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Customers</h5>
+                <p class="card-text">{{ customers_count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Number of Users by Role</h5>
+                <img src="{{ url_for('static', filename='images/img_1.png') }}" class="card-img-top" alt="Bar Chart">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Request Status Distribution</h5>
+                <img src="{{ url_for('static', filename='images/img_2.png') }}" class="card-img-top" alt="Pie Chart">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

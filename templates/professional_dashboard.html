@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Professional Dashboard{% endblock %}
+{% block content %}
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <a class="navbar-brand" href="/professional">Professional</a>
+    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+        aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/professional/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+
+    <h2>Pending Requests</h2>
+    {% if pending_requests %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Description</th>
+                <th>Mobile Number</th>
+                <th>Location</th>
+                <th>Pincode</th>
+                <th>Date Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in pending_requests %}
+            <tr>
+                <td>{{ request.customer.name }}</td>
+                <td>{{ request.description }}</td>
+                <td>{{ request.customer.mobile_number }}</td>
+                <td>{{ request.customer.location }}</td>
+                <td>{{ request.customer.pincode }}</td>
+                <td>{{ request.date_created }}</td>
+                <td>
+                    <a href="/professional/accept_request/{{ request.id }}" class="btn btn-success">Accept</a>
+                    <a href="/professional/reject_request/{{ request.id }}" class="btn btn-danger">Reject</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No pending requests.</p>
+    {% endif %}
+   
+    <h2>Accepted Requests</h2>
+    {% if active_requests %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Description</th>
+                <th>Mobile Number</th>
+                <th>Location</th>
+                <th>Pincode</th>
+                <th>Date Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in active_requests %}
+            <tr>
+                <td>{{ request.customer.name }}</td>
+                <td>{{ request.description }}</td>
+                <td>{{ request.customer.mobile_number }}</td>
+                <td>{{ request.customer.location }}</td>
+                <td>{{ request.customer.pincode }}</td>
+                <td>{{ request.date_created }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No active requests.</p>
+    {% endif %}
+
+    <h2>Closed Requests</h2>
+    {% if completed_requests %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Description</th>
+                <th>Mobile Number</th>
+                <th>Location</th>
+                <th>Pincode</th>
+                <th>Date Created</th>
+                <th>Date Closed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in completed_requests %}
+            <tr>
+                <td>{{ request.customer.name }}</td>
+                <td>{{ request.description }}</td>
+                <td>{{ request.customer.mobile_number }}</td>
+                <td>{{ request.customer.location }}</td>
+                <td>{{ request.customer.pincode }}</td>
+                <td>{{ request.date_created }}</td>
+                <td>{{ request.date_closed }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No completed requests.</p>
+    {% endif %}
+
+    <h2>Rejected Requests</h2>
+    {% if rejected_requests %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Description</th>
+                <th>Mobile Number</th>
+                <th>Location</th>
+                <th>Pincode</th>
+                <th>Date Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in rejected_requests %}
+            <tr>
+                <td>{{ request.customer.name }}</td>
+                <td>{{ request.description }}</td>
+                <td>{{ request.customer.mobile_number }}</td>
+                <td>{{ request.customer.location }}</td>
+                <td>{{ request.customer.pincode }}</td>
+                <td>{{ request.date_created }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No rejected requests.</p>
+    {% endif %}
+</div>
+{% endblock %}

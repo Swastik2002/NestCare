@@ -1,0 +1,26 @@
+.flash-messages {
+    margin-top: 20px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.grad1 {
+    background-image: linear-gradient(to right top, #d1b56b, #c8b75c, #bbba4f, #abbd43, #97c03a, #99b92c, #9ab11b, #9caa00, #b19500, #c37c00, #d35f00, #dd370e);
+}

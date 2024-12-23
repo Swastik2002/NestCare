@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+    <nav class="navbar navbar-expand-sm navbar-dark bg-danger">
+        <a class="navbar-brand" href="/admin">Admin</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId" aria-controls="collapsibleNavId"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/summary">Summary</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <h1>Admin Dashboard</h1>
+    <h2>All users</h2>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Location</th>
+                <th>Pincode</th>
+                <th>Mobile Number</th>
+                <th>Approved</th>
+                <th>Experience</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.location }}</td>
+                <td>{{ user.pincode }}</td>
+                <td>{{ user.mobile_number }}</td>
+                <td>{{ user.is_approved }}</td>
+                <td>{{ user.prof_experience }}</td>
+                <td>
+                    {% if user.role != "admin" %}
+                    {% if user.is_flagged %}
+                    <a href="/admin/unflag_user/{{ user.id }}" class="btn btn-danger">Unflag User</a>
+                    {% else %}
+                    <a href="/admin/flag_user/{{ user.id }}" class="btn btn-warning">Flag User</a>
+                    {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <h2>All Services</h2>
+    {% if services %}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Service ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Base Price</th>
+                <th>Time Required</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.id }}</td>
+                <td>{{ service.name }}</td>
+                <td>{{ service.description }}</td>
+                <td>{{ service.base_price }}</td>
+                <td>{{ service.time_required }}</td>
+                <td>
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editServiceModal-{{ service.id }}">Edit</button>
+                    <div class="modal fade" id="editServiceModal-{{ service.id }}" tabindex="-1" aria-labelledby="editServiceModalLabel-{{ service.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editServiceModalLabel-{{ service.id }}">Edit Service</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" action="/admin/edit_service/{{ service.id }}" class="form-group">
+                                        <label for="name" class="form-label">Name:</label>
+                                        <input type="text" id="name" name="name" value="{{ service.name }}" required class="form-control">
+                                        <label for="description" class="form-label">Description:</label>
+                                        <input type="text" id="description" name="description" value="{{ service.description }}" required class="form-control">
+                                        <label for="base_price" class="form-label">Base Price:</label>
+                                        <input type="number" id="base_price" name="base_price" value="{{ service.base_price }}" required class="form-control">
+                                        <label for="time_required" class="form-label">Time Required:</label>
+                                        <input type="text" id="time_required" name="time_required" value="{{ service.time_required }}" required class="form-control">
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/admin/delete_service/{{ service.id }}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createServiceModal">Create New Service</button>
+    <div class="modal fade" id="createServiceModal" tabindex="-1" aria-labelledby="createServiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createServiceModalLabel">Create New Service</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/admin/create_service">
+                        <label for="name" class="form-label">Name:</label>
+                        <input type="text" id="name" name="name" required class="form-control">
+                        <label for="description" class="form-label">Description:</label>
+                        <input type="text" id="description" name="description" required class="form-control">
+                        <label for="base_price" class="form-label">Base Price:</label>
+                        <input type="number" id="base_price" name="base_price" required class="form-control">
+                        <label for="time_required" class="form-label">Time Required:</label>
+                        <input type="text" id="time_required" name="time_required" required class="form-control">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p>No services found.</p>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createServiceModal">Create Service</button>
+    <div class="modal fade" id="createServiceModal" tabindex="-1" aria-labelledby="createServiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createServiceModalLabel">Create Service</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/admin/create_service" class="form-group">
+                        <label for="name" class="form-label">Name:</label>
+                        <input type="text" id="name" name="name" required class="form-control">
+                        <label for="description" class="form-label">Description:</label>
+                        <input type="text" id="description" name="description" required class="form-control">
+                        <label for="base_price" class="form-label">Base Price:</label>
+                        <input type="number" id="base_price" name="base_price" required class="form-control">
+                        <label for="time_required" class="form-label">Time Required:</label>
+                        <input type="text" id="time_required" name="time_required" required class="form-control">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <br>
+    <br>
+    <h2>All Service Requests</h2>
+    {% if service_requests %}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Service Request ID</th>
+                <th>Service ID</th>
+                <th>Customer ID</th>
+                <th>Professional ID</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Date Created</th>
+                <th>Date Closed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service_request in service_requests %}
+            <tr>
+                <td>{{ service_request.id }}</td>
+                <td>{{ service_request.service_id }}</td>
+                <td>{{ service_request.customer_id }}</td>
+                <td>{{ service_request.professional_id }}</td>
+                <td>{{ service_request.description }}</td>
+                <td>{{ service_request.status }}</td>
+                <td>{{ service_request.date_created }}</td>
+                <td>{{ service_request.date_closed }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No service requests found.</p>
+    {% endif %}
+
+    <br>
+    <h2>Unapproved Professionals</h2>
+    {% if unapproved_professionals %}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Location</th>
+                <th>Pincode</th>
+                <th>Mobile Number</th>
+                <th>Experience</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for up in unapproved_professionals %}
+            <tr>
+                <td>{{ up.id }}</td>
+                <td>{{ up.name }}</td>
+                <td>{{ up.email }}</td>
+                <td>{{ up.location }}</td>
+                <td>{{ up.pincode }}</td>
+                <td>{{ up.mobile_number }}</td>
+                <td>{{ up.prof_experience }}</td>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-{{ up.id }}">
+                        View Portfolio
+                    </button>
+                    <div class="modal fade" id="modal-{{ up.id }}" tabindex="-1" aria-labelledby="modal-{{ up.id }}Label" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modal-{{ up.id }}Label">{{ up.name }}'s Portfolio</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <iframe src="{{ url_for('static', filename='pdf/' + up.prof_profile) }}" width="100%" height="600"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/admin/approve_professional/{{ up.id }}" class="btn btn-success">Approve</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No unapproved professionals found.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Customer Search{% endblock %}
+{% block content %}
+<nav class="navbar navbar-expand-sm navbar-dark bg-black">
+    <a class="navbar-brand" href="/customer">Customer</a>
+    <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#collapsibleNavId"
+        aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavId">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" href="/customer/search">Search</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/customer/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <h2>Search for service providers</h2>
+    <form action="/customer/search" method="get" class="form-inline">
+        <div class="form-group">
+            {% if request.args.get('search_query') %}
+            <input type="text" class="form-control" name="search_query"
+                placeholder="Search by service name, location or pincode"
+                value="{{ request.args.get('search_query') }}">
+            {% else %}
+            <input type="text" class="form-control" name="search_query"
+            placeholder="Search by service name, location or pincode">
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="/customer/search" class="btn btn-outline-success">Reset</a>
+    </form>
+    {% if services %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Service Name</th>
+                <th>Professional Name</th>
+                <th>Location</th>
+                <th>Pincode</th>
+                <th>View Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.name }}</td>
+                <td>
+                    {% for professional in service.professionals %}
+                    {{ professional.name }}<br> <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for professional in service.professionals %}
+                    {{ professional.location }}<br> <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for professional in service.professionals %}
+                    {{ professional.pincode }}<br> <br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for professional in service.professionals %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#view-modal-{{ professional.id }}">View Details</button> <br> <br>
+                    
+                
+
+                <div class="modal fade" id="view-modal-{{ professional.id }}" tabindex="-1"
+                    aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="myModalLabel">Professional Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Name: {{ professional.name }}</p>
+                                <p>Location: {{ professional.location }}</p>
+                                <p>Pincode: {{ professional.pincode }}</p>
+                                <p>Mobile Number: {{ professional.mobile_number }}</p>
+                                <p>Service: {{ service.name }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

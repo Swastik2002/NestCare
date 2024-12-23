@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    <style>
+        section {
+            display: flex;
+            height: 100vh;
+        }
+    </style>
+    <section>
+        <img src="{{ url_for('static', filename='images/img_3.jpg') }}">
+        <div class="card" style="width: 30rem;">
+            <div class="card-body">
+                <h1 class="card-title text-center">Login</h1>
+                <form method="POST" action="/login" class="form-group">
+                    <label for="email" class="form-label">Email:</label>
+                    <input type="email" id="email" name="email" required class="form-control">
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" id="password" name="password" required class="form-control">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <p>Don't have an account? <a href="/register_customer">Register as Customer</a></p>
+                <p>Are you an service professional? <a href="/register_professional">Register as Professional</a></p>
+            </div>
+        </div>
+    </section>
+{% endblock %}
